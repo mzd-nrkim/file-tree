@@ -235,10 +235,11 @@ const renderForeignObjectNode = ({
           {/* Content container with more spacing */}
           <div className="flex flex-col items-center space-y-3 w-full">
             {/* Icon with pastel background circle */}
-            <div
+            {/*<div
               className="mb-2 flex items-center justify-center w-12 h-12 rounded-full bg-gray-100"
               style={{ border: "1.5px solid #A9A9A9" }}
-            >
+        >*/}
+            <div className="mb-2 flex items-center justify-center w-12 h-12 rounded-full bg-gray-100">
               <FaFile className="w-5 h-5 text-gray-500" />
             </div>
 
