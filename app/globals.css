@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* OrgChart Styles */
+.orgchart {
+  background-image: linear-gradient(90deg, rgba(200, 0, 0, 0.15) 10%, rgba(0, 0, 0, 0) 10%), linear-gradient(rgba(200, 0, 0, 0.15) 10%, rgba(0, 0, 0, 0) 10%);
+  background-size: 10px 10px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.orgchart ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.orgchart li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.orgchart .node {
+  box-sizing: border-box;
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  padding: 3px;
+  border: 2px dashed transparent;
+  text-align: center;
+}
+
+.orgchart .node:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+  transition: .5s;
+  cursor: pointer;
+  z-index: 20;
+}
+
+.orgchart .node .title {
+  box-sizing: border-box;
+  padding: 2px;
+  width: 130px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background-color: #006699;
+  color: #fff;
+  border-radius: 4px 4px 0 0;
+}
+
+.orgchart .node .content {
+  box-sizing: border-box;
+  padding: 2px;
+  height: 20px;
+  font-size: 0.625rem;
+  border: 1px solid #006699;
+  border-radius: 0 0 4px 4px;
+  text-align: center;
+  background-color: #fff;
+  color: #333;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.orgchart .lines {
+  height: 20px;
+  width: 4px;
+  border-left: 2px solid #006699;
+  border-right: 2px solid #006699;
+  margin: 0 auto;
+}
+
+.orgchart .lines:before,
+.orgchart .lines:after {
+  content: "";
+  position: absolute;
+  border-left: 2px solid #006699;
+  width: 50%;
+  height: 20px;
+}
+
+.orgchart .lines:before {
+  left: -2px;
+  border-right: 2px solid #006699;
+  box-sizing: border-box;
+}
+
+.orgchart .lines:after {
+  right: -2px;
+  border-left: 2px solid #006699;
+  box-sizing: border-box;
+}
+
+/* Additional styles for the version tree */
+.version-tree {
+  width: 100%;
+  height: 100%;
+}
+
+.version-tree .node {
+  min-width: 220px;
+}
