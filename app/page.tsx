@@ -306,7 +306,13 @@ const renderForeignObjectNode = ({
 
 const VersionTree = () => {
   const [translate, setTranslate] = useState({ x: 500, y: 100 });
+  const [mounted, setMounted] = useState(false);
   const treeData = transformDataToD3Tree(data.files, data.relations);
+
+  // Use useEffect to handle client-side only rendering
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Handler for when the tree is loaded
   const onTreeLoad = () => {
@@ -316,18 +322,21 @@ const VersionTree = () => {
 
   return (
     <div className="w-full h-[1200px] border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
-      <style>
-        {`
-          .rd3t-link {
-            stroke: #A9A9A9 !important;
-            stroke-width: 2px;
-          }
-          .rd3t-tree-container {
-            background-color: #fafafa;
-            border-radius: 0.75rem;
-          }
-        `}
-      </style>
+      {/* Global styles for the tree need to be client-side only */}
+      {typeof window !== "undefined" && (
+        <style>
+          {`
+            .rd3t-link {
+              stroke: #A9A9A9 !important;
+              stroke-width: 2px;
+            }
+            .rd3t-tree-container {
+              background-color: #fafafa;
+              border-radius: 0.75rem;
+            }
+          `}
+        </style>
+      )}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-800">버전 트리</h1>
         <div className="flex space-x-2">
@@ -340,27 +349,35 @@ const VersionTree = () => {
         </div>
       </div>
       <div style={{ width: "100%", height: "800px" }}>
-        <Tree
-          data={treeData}
-          translate={translate}
-          orientation="vertical"
-          renderCustomNodeElement={renderForeignObjectNode}
-          pathFunc="step"
-          separation={{ siblings: 3, nonSiblings: 3.5 }}
-          zoom={0.9}
-          nodeSize={{ x: 240, y: 180 }}
-          collapsible={true}
-          initialDepth={5}
-          pathClassFunc={() => "stroke-gray-200 stroke-2"}
-          enableLegacyTransitions={false}
-          transitionDuration={300}
-          zoomable={true}
-          onNodeClick={(nodeDatum, evt) => {
-            console.log("Node clicked:", nodeDatum.attributes?.id);
-            // You could add custom behavior here
-          }}
-          onLoad={onTreeLoad}
-        />
+        {/* Only render the Tree component on the client side */}
+        {mounted && (
+          <Tree
+            data={treeData}
+            translate={translate}
+            orientation="vertical"
+            renderCustomNodeElement={renderForeignObjectNode}
+            pathFunc="step"
+            separation={{ siblings: 3, nonSiblings: 3.5 }}
+            zoom={0.9}
+            nodeSize={{ x: 240, y: 180 }}
+            collapsible={true}
+            initialDepth={5}
+            pathClassFunc={() => "stroke-gray-200 stroke-2"}
+            enableLegacyTransitions={false}
+            transitionDuration={300}
+            zoomable={true}
+            onNodeClick={(nodeDatum, evt) => {
+              console.log("Node clicked:", nodeDatum.attributes?.id);
+              // You could add custom behavior here
+            }}
+            onLoad={onTreeLoad}
+          />
+        )}
+        {!mounted && (
+          <div className="w-full h-full flex items-center justify-center">
+            <p className="text-gray-500">트리 로딩 중...</p>
+          </div>
+        )}
       </div>
     </div>
   );
