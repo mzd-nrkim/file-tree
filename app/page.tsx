@@ -235,8 +235,10 @@ const renderForeignObjectNode = ({
           {/* Content container with more spacing */}
           <div className="flex flex-col items-center space-y-3 w-full">
             {/* Icon with pastel background circle */}
-            {/* <div className="mb-2 flex items-center justify-center w-12 h-12 rounded-full bg-gray-100" style={{ border: '1.5px solid #A9A9A9' }}> */}
-            <div className="mb-2 flex items-center justify-center w-12 h-12 rounded-full bg-gray-100">
+            <div
+              className="mb-2 flex items-center justify-center w-12 h-12 rounded-full bg-gray-100"
+              style={{ border: "1.5px solid #A9A9A9" }}
+            >
               <FaFile className="w-5 h-5 text-gray-500" />
             </div>
 
@@ -304,28 +306,17 @@ const renderForeignObjectNode = ({
   );
 };
 
-const VersionTree = () => {
-  const [translate, setTranslate] = useState({ x: 500, y: 100 });
-  const [mounted, setMounted] = useState(false);
-  const treeData = transformDataToD3Tree(data.files, data.relations);
+// Create a completely client-side component for the tree
+const TreeContainer = dynamic(
+  () =>
+    Promise.resolve(() => {
+      const [translate, setTranslate] = useState({ x: 500, y: 100 });
+      const treeData = transformDataToD3Tree(data.files, data.relations);
 
-  // Use useEffect to handle client-side only rendering
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Handler for when the tree is loaded
-  const onTreeLoad = () => {
-    // You could set initial state here
-    console.log("Tree loaded");
-  };
-
-  return (
-    <div className="w-full h-[1200px] border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
-      {/* Global styles for the tree need to be client-side only */}
-      {typeof window !== "undefined" && (
-        <style>
-          {`
+      return (
+        <>
+          <style>
+            {`
             .rd3t-link {
               stroke: #A9A9A9 !important;
               stroke-width: 2px;
@@ -335,50 +326,51 @@ const VersionTree = () => {
               border-radius: 0.75rem;
             }
           `}
-        </style>
-      )}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">버전 트리</h1>
-        <div className="flex space-x-2">
-          <button
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors"
-            onClick={() => setTranslate({ x: 500, y: 100 })}
-          >
-            중앙으로
-          </button>
-        </div>
-      </div>
-      <div style={{ width: "100%", height: "800px" }}>
-        {/* Only render the Tree component on the client side */}
-        {mounted && (
-          <Tree
-            data={treeData}
-            translate={translate}
-            orientation="vertical"
-            renderCustomNodeElement={renderForeignObjectNode}
-            pathFunc="step"
-            separation={{ siblings: 3, nonSiblings: 3.5 }}
-            zoom={0.9}
-            nodeSize={{ x: 240, y: 180 }}
-            collapsible={true}
-            initialDepth={5}
-            pathClassFunc={() => "stroke-gray-200 stroke-2"}
-            enableLegacyTransitions={false}
-            transitionDuration={300}
-            zoomable={true}
-            onNodeClick={(nodeDatum, evt) => {
-              console.log("Node clicked:", nodeDatum.attributes?.id);
-              // You could add custom behavior here
-            }}
-            onLoad={onTreeLoad}
-          />
-        )}
-        {!mounted && (
-          <div className="w-full h-full flex items-center justify-center">
-            <p className="text-gray-500">트리 로딩 중...</p>
+          </style>
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold text-gray-800">버전 트리</h1>
+            <div className="flex space-x-2">
+              <button
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm font-medium text-gray-700 transition-colors"
+                onClick={() => setTranslate({ x: 500, y: 100 })}
+              >
+                중앙으로
+              </button>
+            </div>
           </div>
-        )}
-      </div>
+          <div style={{ width: "100%", height: "800px" }}>
+            <Tree
+              data={treeData}
+              translate={translate}
+              orientation="vertical"
+              renderCustomNodeElement={renderForeignObjectNode}
+              pathFunc="step"
+              separation={{ siblings: 2, nonSiblings: 2.5 }}
+              zoom={0.9}
+              nodeSize={{ x: 240, y: 220 }}
+              collapsible={true}
+              initialDepth={5}
+              pathClassFunc={() => "stroke-gray-200 stroke-2"}
+              enableLegacyTransitions={false}
+              transitionDuration={300}
+              zoomable={true}
+              onNodeClick={(nodeDatum, evt) => {
+                console.log("Node clicked:", nodeDatum.attributes?.id);
+              }}
+              onLoad={() => console.log("Tree loaded")}
+            />
+          </div>
+        </>
+      );
+    }),
+  { ssr: false }
+);
+
+const VersionTree = () => {
+  // Simple wrapper component that doesn't do any SSR
+  return (
+    <div className="w-full h-[1200px] border border-gray-200 rounded-xl p-6 bg-white shadow-sm">
+      <TreeContainer />
     </div>
   );
 };
