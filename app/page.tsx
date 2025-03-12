@@ -16,7 +16,6 @@ interface FileData {
   created_at: string;
   created_by: number;
   created_by_name: string;
-  description: string;
 }
 
 interface Relation {
@@ -43,7 +42,6 @@ const data = {
       created_at: "2025-01-23T12:54:12.378300",
       created_by: 2001,
       created_by_name: "string",
-      description: "Version 6 of the file",
     },
     {
       id: 177,
@@ -52,7 +50,6 @@ const data = {
       created_at: "2025-01-16T14:19:58.057134",
       created_by: 2001,
       created_by_name: "string",
-      description: "Version 5 of the file",
     },
     {
       id: 173,
@@ -61,7 +58,6 @@ const data = {
       created_at: "2025-01-16T13:40:36.137477",
       created_by: 2001,
       created_by_name: "string",
-      description: "Version 4 of the file",
     },
     {
       id: 172,
@@ -70,7 +66,6 @@ const data = {
       created_at: "2025-01-16T13:40:13.766081",
       created_by: 2001,
       created_by_name: "string",
-      description: "Version 3 of the file",
     },
     {
       id: 86,
@@ -79,7 +74,6 @@ const data = {
       created_at: "2024-12-12T14:26:27.815476",
       created_by: 2001,
       created_by_name: "string",
-      description: "Version 2 of the file",
     },
     {
       id: 85,
@@ -88,7 +82,6 @@ const data = {
       created_at: "2024-12-11T17:12:13.223835",
       created_by: 2001,
       created_by_name: "string",
-      description: "Version 1 of the file",
     },
   ],
   relations: [
@@ -152,7 +145,6 @@ const transformDataToD3Tree = (
         date: formattedDate,
         version: file.version,
         fileName: file.original_name,
-        description: file.description,
         createdBy: file.created_by_name,
         fullDate: file.created_at,
       } as Record<string, string | number | boolean>,
@@ -207,7 +199,7 @@ const renderForeignObjectNode = ({
       {/* This rect is just for handling clicks */}
       <rect
         width="160"
-        height="150"
+        height="160"
         x="-80"
         y="-65"
         rx="10"
@@ -219,7 +211,7 @@ const renderForeignObjectNode = ({
       />
       <foreignObject
         width={160}
-        height={150}
+        height={130}
         x={-80}
         y={-65}
         className="overflow-visible pointer-events-none"
@@ -246,9 +238,6 @@ const renderForeignObjectNode = ({
             {/* Date and version with more spacing */}
             <div className="text-base text-gray-700 font-small">
               {nodeDatum.name}
-            </div>
-            <div className="text-xs text-gray-500">
-              {nodeDatum.attributes?.version}
             </div>
           </div>
 
@@ -295,10 +284,6 @@ const renderForeignObjectNode = ({
                 <span className="font-medium">생성자:</span>{" "}
                 {nodeDatum.attributes?.createdBy}
               </p>
-              <p className="text-gray-600">
-                <span className="font-medium">설명:</span>{" "}
-                {nodeDatum.attributes?.description}
-              </p>
             </div>
           </div>
         </div>
@@ -339,18 +324,18 @@ const TreeContainer = dynamic(
               </button>
             </div>
           </div>
-          <div style={{ width: "100%", height: "800px" }}>
+          <div style={{ width: "100%", height: "1200px" }}>
             <Tree
               data={treeData}
               translate={translate}
               orientation="vertical"
               renderCustomNodeElement={renderForeignObjectNode}
               pathFunc="step"
-              separation={{ siblings: 2, nonSiblings: 2.5 }}
+              separation={{ siblings: 1.5, nonSiblings: 2 }}
               zoom={0.9}
               nodeSize={{ x: 240, y: 220 }}
               collapsible={true}
-              initialDepth={5}
+              initialDepth={4}
               pathClassFunc={() => "stroke-gray-200 stroke-2"}
               enableLegacyTransitions={false}
               transitionDuration={300}
